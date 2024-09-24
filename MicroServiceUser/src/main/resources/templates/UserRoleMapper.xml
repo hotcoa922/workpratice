@@ -14,14 +14,14 @@
 
     <!-- 생성 -->
     <insert id="insertUserRole" parameterType="com.example.microserviceuser.domain.UserRoles">
-        INSERT INTO UserRoles (userId, roleId, createdDate, updatedDate)
-        VALUES (#{userId}, #{roleId}, NOW(), NOW())
+        INSERT INTO UserRoles (userId, roleId)
+        VALUES (#{userId}, #{roleId})
     </insert>
 
     <!-- 수정 -->
     <update id="updateUserRole" parameterType="com.example.microserviceuser.domain.UserRoles">
         UPDATE UserRoles
-        SET userId = #{userId}, roleId = #{roleId}, updatedDate = NOW()
+        SET userId = #{userId}, roleId = #{roleId}
         WHERE id = #{id}
     </update>
 

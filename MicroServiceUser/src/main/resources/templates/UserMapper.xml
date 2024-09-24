@@ -14,14 +14,14 @@
 
     <!-- 생성 -->
     <insert id="insertUser" parameterType="com.example.microserviceuser.domain.Users">
-        INSERT INTO Users (username, email, password, createdDate, updatedDate)
-        VALUES (#{username}, #{email}, #{password}, NOW(), NOW())
+        INSERT INTO Users (username, email, password)
+        VALUES (#{username}, #{email}, #{password})
     </insert>
 
     <!-- 수정 -->
     <update id="updateUser" parameterType="com.example.microserviceuser.domain.Users">
         UPDATE Users
-        SET username = #{username}, email = #{email}, password = #{password}, updatedDate = NOW()
+        SET username = #{username}, email = #{email}, password = #{password}
         WHERE id = #{id}
     </update>
 
