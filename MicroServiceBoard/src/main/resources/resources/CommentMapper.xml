@@ -6,30 +6,30 @@
     <!--조회-->
     <select id="findAllComments" resultType="com.example.microserviceboard.domain.Comments">
         SELECT *
-        FROM COMMENTS
+        FROM Comments
     </select>
 
     <select id="findCommentsById" parameterType="long"  resultType="com.example.microserviceboard.domain.Comments">
         SELECT *
-        FROM COMMENTS
+        FROM Comments
         WHERE ID = #{ID}
     </select>
 
     <!-- 생성 (TIME관련은 따로 처리)-->
     <insert id="createComment" parameterType="com.example.microserviceboard.domain.Comments">
-        INSERT INTO COMMENTS (TITLE, CONTENT, AUTHORID) VALUES(#{TITLE}, #{CONTENT}, #{AUTHORID})
+        INSERT INTO Comments (CONTENT, AUTHORID) VALUES(#{CONTENT}, #{AUTHORID})
     </insert>
 
     <!-- 수정 (TIME관련은 따로 처리) -->
     <update id="updatdComment" parameterType="com.example.microserviceboard.domain.Comments">
-        UPDATE COMMENTS SET TITLE = #{TITLE}, CONTENT = #{CONTENT}
+        UPDATE Comments SET CONTENT = #{CONTENT}
         WHERE ID = #{ID}
     </update>
 
 
     <!-- 삭제 -->
     <delete id="deleteComment" parameterType="long">
-        DELETE FROM COMMENTS
+        DELETE FROM Comments
         WHERE ID = #{ID}
     </delete>
 

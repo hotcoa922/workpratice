@@ -1,6 +1,6 @@
 package com.example.microserviceboard.domain;
 
-public class Posts {
+public class Posts extends BaseTime {
 
     private Long id;
     private String title;
