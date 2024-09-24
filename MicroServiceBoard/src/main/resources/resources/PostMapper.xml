@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> <!--doctype 선언, MyBatis 매퍼 파일의 DTD임을 명시, XML 파일이 MyBatis 매퍼 파일의 형식을 따르고 있음을 보증 -->
+
+<mapper namespace="com.example.microserviceboard.mapper.PostMapper"><!-- 모든 SQL 쿼리와 명령은 <mapper> 태그 안에 정의, namespace 속성은 매퍼 인터페이스의 전체 클래스 이름과 일치-->
+
+    <!--조회-->
+    <select id="findAllPosts" resultType="com.example.microserviceboard.domain.Posts">
+        SELECT *
+        FROM Posts
+    </select>
+
+    <select id="findPostById" parameterType="long"  resultType="com.example.microserviceboard.domain.Posts">
+        SELECT *
+        FROM Posts
+        WHERE ID = #{ID}
+    </select>
+
+    <!-- 생성 (TIME관련은 따로 처리)-->
+    <insert id="createPost" parameterType="com.example.microserviceboard.domain.Posts">
+        INSERT INTO Posts (TITLE, CONTENT, AUTHORID) VALUES(#{TITLE}, #{CONTENT}, #{AUTHORID})
+    </insert>
+
+    <!-- 수정 (TIME관련은 따로 처리) -->
+    <update id="updatdPost" parameterType="com.example.microserviceboard.domain.Posts">
+        UPDATE Posts SET TITLE = #{TITLE}, CONTENT = #{CONTENT}
+        WHERE ID = #{ID}
+    </update>
+
+
+    <!-- 삭제 -->
+    <delete id="deletePost" parameterType="long">
+        DELETE FROM Posts
+        WHERE ID = #{ID}
+    </delete>
+</mapper>
