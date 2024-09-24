@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.microserviceuser.mapper.UsersMapper">
+
+    <!-- 조회 -->
+    <select id="findAllUsers" resultType="com.example.microserviceuser.domain.Users">
+        SELECT * FROM Users
+    </select>
+
+    <select id="findUserById" parameterType="long" resultType="com.example.microserviceuser.domain.Users">
+        SELECT * FROM Users WHERE id = #{id}
+    </select>
+
+    <!-- 생성 -->
+    <insert id="insertUser" parameterType="com.example.microserviceuser.domain.Users">
+        INSERT INTO Users (username, email, password, createdDate, updatedDate)
+        VALUES (#{username}, #{email}, #{password}, NOW(), NOW())
+    </insert>
+
+    <!-- 수정 -->
+    <update id="updateUser" parameterType="com.example.microserviceuser.domain.Users">
+        UPDATE Users
+        SET username = #{username}, email = #{email}, password = #{password}, updatedDate = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="deleteUser" parameterType="long">
+        DELETE FROM Users WHERE id = #{id}
+    </delete>
+</mapper>

@@ -10,7 +10,7 @@ spring:
     password: admin123
     driver-class-name: org.mariadb.jdbc.Driver
 
-mybatis:
+mybatis:  # src/main/resources/mappers/ 하위
   mapper-locations: classpath:/mappers/**/*.xml
 
 eureka:
