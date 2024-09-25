@@ -14,6 +14,9 @@ public interface RoleMapper {
     @Select("SELECT * FROM Roles WHERE id = #{id}")
     Roles findRoleById(Long id);
 
+    @Select("SELECT * FROM Roles WHERE roleName = #{roleName}")
+    Roles findByRoleName(String roleName);
+
     @Insert("INSERT INTO Roles (roleName) " +
             "VALUES (#{roleName})")
     void insertRole(Roles role);

@@ -8,8 +8,13 @@
         SELECT * FROM Roles
     </select>
 
-    <select id="findRoleById" parameterType="long" resultType="com.example.microserviceuser.domain.Roles">
+    <select id="findRoleById" parameterType="Long" resultType="com.example.microserviceuser.domain.Roles">
         SELECT * FROM Roles WHERE id = #{id}
+    </select>
+
+    <!--  -->
+    <select id="findRoleByName" parameterType="String" resultType="com.example.microserviceuser.domain.Roles">
+        SELECT * FROM Roles WHERE roleName = #{roleName}
     </select>
 
     <!-- 생성 -->
@@ -26,7 +31,7 @@
     </update>
 
     <!-- 삭제 -->
-    <delete id="deleteRole" parameterType="long">
+    <delete id="deleteRole" parameterType="Long">
         DELETE FROM Roles WHERE id = #{id}
     </delete>
 </mapper>

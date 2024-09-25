@@ -1,5 +1,6 @@
 package com.example.microserviceuser.util;
 
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,12 +22,15 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         if (jwtTokenProvider.validateToken(token)) {
             String username = jwtTokenProvider.getUsernameFromJWT(token);
 
-            // 유저 정보를 가져와서 Authentication 객체 생성
-            UserDetails userDetails = jwtTokenProvider.getUserDetails(username); // 사용자의 세부 정보 로드
+            // JWT에서 권한 정보 가져오기
+            var roles = jwtTokenProvider.getRolesFromJWT(token);
+
+            // 유저 정보를 가져와서 Authentication 객체 생성 (권한 정보 포함)
+            UserDetails userDetails = jwtTokenProvider.getUserDetails(username, roles); // 권한 정보를 함께 전달
             return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
         }
 
-        return null;
+        return null; // 토큰이 유효하지 않을 경우 인증 실패로 처리
     }
 
     @Override

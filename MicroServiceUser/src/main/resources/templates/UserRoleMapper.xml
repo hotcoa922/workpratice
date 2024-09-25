@@ -8,8 +8,12 @@
         SELECT * FROM UserRoles
     </select>
 
-    <select id="findUserRoleById" parameterType="long" resultType="com.example.microserviceuser.domain.UserRoles">
-        SELECT * FROM UserRoles WHERE id = #{id}
+    <select id="findUserRoleByEmail" parameterType="String" resultType="com.example.microserviceuser.domain.UserRoles">
+        SELECT ur.userId, ur.roleId, r.roleName
+        FROM UserRoles ur
+            INNER JOIN Users u ON ur.userId = u.id
+            INNER JOIN Roles r ON ur.roleId = r.id
+        WHERE u.email = #{email}
     </select>
 
     <!-- 생성 -->
@@ -26,7 +30,7 @@
     </update>
 
     <!-- 삭제 -->
-    <delete id="deleteUserRole" parameterType="long">
+    <delete id="deleteUserRole" parameterType="Long">
         DELETE FROM UserRoles WHERE id = #{id}
     </delete>
 </mapper>

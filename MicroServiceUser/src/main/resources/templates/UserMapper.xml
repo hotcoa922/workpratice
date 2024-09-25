@@ -8,8 +8,8 @@
         SELECT * FROM Users
     </select>
 
-    <select id="findUserById" parameterType="long" resultType="com.example.microserviceuser.domain.Users">
-        SELECT * FROM Users WHERE id = #{id}
+    <select id="findUserByEmail" parameterType="String" resultType="com.example.microserviceuser.domain.Users">
+        SELECT * FROM Users WHERE email = #{email}
     </select>
 
     <!-- 생성 -->
