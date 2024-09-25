@@ -1,7 +1,6 @@
 package com.example.microserviceboard.dto;
 
-public class PostDTO {
+public class CommentDto {
     private Long id;
-    private String title;
     private String content;
 }

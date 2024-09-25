@@ -1,14 +1,20 @@
 package com.example.microserviceboard.service;
 
-import com.example.microserviceboard.domain.Posts;
-
-import java.util.List;
+import com.example.microserviceboard.dto.CreatePostDto;
+import com.example.microserviceboard.dto.UpdatePostDto;
 
 public interface BoardService {
 
-    List<Posts> findAllPosts();     // 모든 게시글 조회
-    Posts findPostById(Long id);    // ID를 기반으로 한 게시글 조회
-    void createPost(Posts post);    // 새 게시글 생성
-    void updatePost(Posts post);    // 게시글 수정
-    void deletePost(Long id);       // 게시글 삭제
+
+    //게시글 작성
+    void createPost(CreatePostDto createPostDto);
+
+    //수정
+    void updatePost(UpdatePostDto updatePostDto);
+
+    //삭제
+    void deletePost(Long postId, Long authorId);
+
+
+
 }
