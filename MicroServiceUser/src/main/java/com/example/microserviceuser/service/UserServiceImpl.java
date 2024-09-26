@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void registerUser(RegisterDto registerDto) {
+
+        Roles role = roleMapper.findByRoleName(RoleType.USER_AUTH.name());
+
         String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
 
         Users user = Users.builder()
@@ -49,22 +53,20 @@ public class UserServiceImpl implements UserService {
                 .email(registerDto.getEmail())
                 .password(encodedPassword)
                 .build();
-
-        //mapper로 정보 저장
         userMapper.insertUser(user);
-
-
-        //권한처리(USER_AUTH)
-        Roles role = roleMapper.findByRoleName(RoleType.USER_AUTH.name());
-        System.out.println("Role found: " + role);
 
         UserRoles userRole = UserRoles.builder()
                 .userId(user.getId())
                 .roleId(role.getId())
                 .build();
-
-        //mapper로 정보 저장
         userRoleMapper.insertUserRole(userRole);
+
+        // JWT 토큰 발급
+        List<String> roles = Collections.singletonList(role.getRoleName().name());
+        String token = jwtTokenProvider.generateToken(user.getUsername(), roles);
+
+        // JWT 토큰 콘솔 출력
+        System.out.println("JWT Token: " + token);
     }
 
     @Override
