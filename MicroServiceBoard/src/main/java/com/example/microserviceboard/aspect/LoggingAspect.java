@@ -1,5 +1,4 @@
-package com.example.microserviceuser.aspect;
-
+package com.example.microserviceboard.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -17,8 +16,12 @@ public class LoggingAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
 
-    @Around("execution(* com.example.microserviceuser.service.UserServiceImpl.registerUser(..)) ||" +
-            "execution(* com.example.microserviceuser.service.UserServiceImpl.login(..))"
+    @Around("execution(* com.example.microserviceboard.service.BoardServiceImpl.createPost(..)) ||" +
+            "execution(* com.example.microserviceboard.service.BoardServiceImpl.updatePost(..)) ||" +
+            "execution(* com.example.microserviceboard.service.BoardServiceImpl.deletePost(..)) ||" +
+            "execution(* com.example.microserviceboard.service.BoardServiceImpl.createComment(..)) ||" +
+            "execution(* com.example.microserviceboard.service.BoardServiceImpl.updateComment(..)) ||" +
+            "execution(* com.example.microserviceboard.service.BoardServiceImpl.deleteComment(..)) "
             )
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         //ProceedingJoinPoint는 AOP에서 타겟 메서드(Advice가 적용된 메서드)에 대한 정보를 제공하고, 해당 메서드의 실행을 제어하는 기능을 제공
@@ -36,7 +39,6 @@ public class LoggingAspect {
 
         return result;
     }
-
 
 
 }
