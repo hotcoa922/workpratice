@@ -21,6 +21,7 @@ public interface UserRoleMapper {
 
     @Insert("INSERT INTO UserRoles (userId, roleId) " +
             "VALUES (#{userId}, #{roleId})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertUserRole(UserRoles userRole);
 
     @Update("UPDATE UserRoles SET userId = #{userId}, roleId = #{roleId} " +

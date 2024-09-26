@@ -19,6 +19,7 @@ public interface RoleMapper {
 
     @Insert("INSERT INTO Roles (roleName) " +
             "VALUES (#{roleName})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertRole(Roles role);
 
     @Update("UPDATE Roles SET roleName = #{roleName}  WHERE id = #{id}")

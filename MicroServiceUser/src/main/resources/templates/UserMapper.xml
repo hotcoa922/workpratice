@@ -13,7 +13,7 @@
     </select>
 
     <!-- 생성 -->
-    <insert id="insertUser" parameterType="com.example.microserviceuser.domain.Users">
+    <insert id="insertUser" parameterType="com.example.microserviceuser.domain.Users" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO Users (username, email, password)
         VALUES (#{username}, #{email}, #{password})
     </insert>

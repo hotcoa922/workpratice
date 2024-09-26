@@ -53,8 +53,10 @@ public class UserServiceImpl implements UserService {
         //mapper로 정보 저장
         userMapper.insertUser(user);
 
+
         //권한처리(USER_AUTH)
         Roles role = roleMapper.findByRoleName(RoleType.USER_AUTH.name());
+        System.out.println("Role found: " + role);
 
         UserRoles userRole = UserRoles.builder()
                 .userId(user.getId())

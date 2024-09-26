@@ -18,9 +18,9 @@
     </select>
 
     <!-- 생성 -->
-    <insert id="insertRole" parameterType="com.example.microserviceuser.domain.Roles">
+    <insert id="insertRole" parameterType="com.example.microserviceuser.domain.Roles" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO Roles (roleName)
-        VALUES (#{roleName})
+        VALUES ('USER_AUTH')
     </insert>
 
     <!-- 수정 -->

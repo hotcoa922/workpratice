@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Users extends BaseTime{
 
-    private Long id;
+    private Long id;    //xml파일에서 자동증가 처리
     private String username;
     private String email;
     private String password;
