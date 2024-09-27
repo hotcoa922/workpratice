@@ -3,34 +3,32 @@
 
 <mapper namespace="com.example.microserviceboard.mapper.CommentMapper"><!-- 모든 SQL 쿼리와 명령은 <mapper> 태그 안에 정의, namespace 속성은 매퍼 인터페이스의 전체 클래스 이름과 일치-->
 
-    <!--조회-->
+    <!-- 조회 -->
     <select id="findAllComments" resultType="com.example.microserviceboard.domain.Comments">
         SELECT *
         FROM Comments
     </select>
 
-    <select id="findCommentsById" parameterType="long"  resultType="com.example.microserviceboard.domain.Comments">
+    <select id="findCommentById" parameterType="long" resultType="com.example.microserviceboard.domain.Comments">
         SELECT *
         FROM Comments
-        WHERE ID = #{ID}
+        WHERE id = #{id}
     </select>
 
-    <!-- 생성 (TIME관련은 따로 처리)-->
-    <insert id="createComment" parameterType="com.example.microserviceboard.domain.Comments">
-        INSERT INTO Comments (CONTENT, AUTHORID) VALUES(#{CONTENT}, #{AUTHORID})
+    <!-- 생성 (TIME 관련은 따로 처리) -->
+    <insert id="createComment" parameterType="com.example.microserviceboard.domain.Comments" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Comments (postId, content, authorEmail) VALUES(#{postId}, #{content}, #{authorEmail})
     </insert>
 
-    <!-- 수정 (TIME관련은 따로 처리) -->
-    <update id="updatdComment" parameterType="com.example.microserviceboard.domain.Comments">
-        UPDATE Comments SET CONTENT = #{CONTENT}
-        WHERE ID = #{ID}
+    <!-- 수정 (TIME 관련은 따로 처리) -->
+    <update id="updateComment" parameterType="com.example.microserviceboard.domain.Comments">
+        UPDATE Comments SET content = #{content}
+        WHERE id = #{id}
     </update>
-
 
     <!-- 삭제 -->
     <delete id="deleteComment" parameterType="long">
-        DELETE FROM Comments
-        WHERE ID = #{ID}
+        DELETE FROM Comments WHERE id = #{id}
     </delete>
 
 </mapper>

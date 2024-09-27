@@ -5,6 +5,7 @@ import com.example.microserviceuser.domain.UserRoles;
 import com.example.microserviceuser.domain.Users;
 import com.example.microserviceuser.dto.LoginDto;
 import com.example.microserviceuser.dto.RegisterDto;
+import com.example.microserviceuser.dto.UserDto;
 import com.example.microserviceuser.dto.UserRoleDetailDto;
 import com.example.microserviceuser.enumtype.RoleType;
 import com.example.microserviceuser.mapper.RoleMapper;
@@ -38,6 +39,29 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
 
+    }
+
+    @Override
+    public UserDto getUserByUsername(String username) {
+        // 사용자 정보 조회
+        Users user = userMapper.findUserByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        }
+
+        // 사용자 권한 정보 조회
+        List<UserRoleDetailDto> roles = userRoleMapper.findUserRolesByUserId(user.getId());
+        List<String> roleNames = roles.stream()
+                .map(UserRoleDetailDto::getRoleName)
+                .collect(Collectors.toList());
+
+        // UserDto 생성 후 반환
+        return UserDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .roles(roleNames)
+                .build();
     }
 
     @Override

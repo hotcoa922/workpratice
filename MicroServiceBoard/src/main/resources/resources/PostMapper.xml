@@ -3,33 +3,31 @@
 
 <mapper namespace="com.example.microserviceboard.mapper.PostMapper"><!-- 모든 SQL 쿼리와 명령은 <mapper> 태그 안에 정의, namespace 속성은 매퍼 인터페이스의 전체 클래스 이름과 일치-->
 
-    <!--조회-->
+    <!-- 조회 -->
     <select id="findAllPosts" resultType="com.example.microserviceboard.domain.Posts">
         SELECT *
         FROM Posts
     </select>
 
-    <select id="findPostById" parameterType="long"  resultType="com.example.microserviceboard.domain.Posts">
+    <select id="findPostById" parameterType="long" resultType="com.example.microserviceboard.domain.Posts">
         SELECT *
         FROM Posts
-        WHERE ID = #{ID}
+        WHERE id = #{id}
     </select>
 
-    <!-- 생성 (TIME관련은 따로 처리)-->
-    <insert id="createPost" parameterType="com.example.microserviceboard.domain.Posts">
-        INSERT INTO Posts (TITLE, CONTENT, AUTHORID) VALUES(#{TITLE}, #{CONTENT}, #{AUTHORID})
+    <!-- 생성 (TIME 관련은 따로 처리) -->
+    <insert id="createPost" parameterType="com.example.microserviceboard.domain.Posts" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Posts (title, content, authorEmail) VALUES (#{title}, #{content}, #{authorEmail})
     </insert>
 
-    <!-- 수정 (TIME관련은 따로 처리) -->
-    <update id="updatdPost" parameterType="com.example.microserviceboard.domain.Posts">
-        UPDATE Posts SET TITLE = #{TITLE}, CONTENT = #{CONTENT}
-        WHERE ID = #{ID}
+    <!-- 수정 (TIME 관련은 따로 처리) -->
+    <update id="updatePost" parameterType="com.example.microserviceboard.domain.Posts">
+        UPDATE Posts SET title = #{title}, content = #{content}
+        WHERE id = #{id}
     </update>
-
 
     <!-- 삭제 -->
     <delete id="deletePost" parameterType="long">
-        DELETE FROM Posts
-        WHERE ID = #{ID}
+        DELETE FROM Posts WHERE id = #{id}
     </delete>
 </mapper>

@@ -7,12 +7,10 @@ import lombok.Data;
 public class CreatePostDto {
     private String title;
     private String content;
-    private Long authorId;
 
     @Builder
-    public CreatePostDto(String title, String content, Long authorId) {
+    public CreatePostDto(String title, String content) {
         this.title = title;
         this.content = content;
-        this.authorId = authorId;
     }
 }

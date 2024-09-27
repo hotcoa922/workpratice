@@ -1,8 +1,7 @@
-package com.example.microserviceuser.util;
+package com.example.microserviceboard.util;
 
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +31,7 @@ public class JwtTokenProvider {
 
     private SecretKey key;
 
+    // SecretKey 초기화
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -52,16 +52,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // 유저 세부 정보 생성
-    public UserDetails getUserDetails(String username, List<String> roles) {
-        return User.withUsername(username)
-                .password("") // 비밀번호는 빈 문자열로 설정
-                .authorities(roles.stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                        .collect(Collectors.toList()))
-                .build();
-    }
-
     // JWT 토큰에서 사용자 이름 추출
     public String getUsernameFromJWT(String token) {
         Claims claims = parseJwt(token);
@@ -71,15 +61,7 @@ public class JwtTokenProvider {
     // JWT 토큰에서 권한 정보 추출
     public List<String> getRolesFromJWT(String token) {
         Claims claims = parseJwt(token);
-        if (claims != null) {
-            Object roles = claims.get("roles");
-            if (roles instanceof List<?>) {
-                return ((List<?>) roles).stream()
-                        .map(Object::toString)
-                        .collect(Collectors.toList());
-            }
-        }
-        return null;
+        return claims != null ? claims.get("roles", List.class) : null;
     }
 
     // JWT 토큰 검증
@@ -87,7 +69,17 @@ public class JwtTokenProvider {
         return parseJwt(token) != null;
     }
 
-    // JWT 토큰에서 클레임 파싱
+    // 유저 세부 정보 생성
+    public UserDetails getUserDetails(String username, List<String> roles) {
+        return User.withUsername(username)
+                .password("")
+                .authorities(roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    // JWT 토큰 파싱
     private Claims parseJwt(String jwt) {
         try {
             return Jwts.parserBuilder()

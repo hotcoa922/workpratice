@@ -1,4 +1,5 @@
-package com.example.microserviceuser.util;
+package com.example.microserviceboard.util;
+
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = User.withUsername(username)
                     .password("") // 비밀번호는 빈 문자열로 설정
                     .authorities(roles.stream()
-                            .map(SimpleGrantedAuthority::new)
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                             .collect(Collectors.toList()))
                     .build();
 

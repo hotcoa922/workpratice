@@ -2,9 +2,12 @@ package com.example.microserviceuser.service;
 
 import com.example.microserviceuser.dto.LoginDto;
 import com.example.microserviceuser.dto.RegisterDto;
+import com.example.microserviceuser.dto.UserDto;
 
 public interface UserService {
 
+
+    UserDto getUserByUsername(String username);
     //회원가입
     void registerUser(RegisterDto registerDto);
 

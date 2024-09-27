@@ -7,14 +7,14 @@ import lombok.Data;
 public class UpdateCommentDto {
     private Long id;
     private String content;
-    private Long authorId;
+    private String authorEmail;
     private Long postId;
 
     @Builder
-    public UpdateCommentDto(Long id, Long postId, String content, Long authorId) {
+    public UpdateCommentDto(Long id, Long postId, String content, String authorEmail) {
         this.id = id;
         this.postId = postId;
         this.content = content;
-        this.authorId = authorId;
+        this.authorEmail = authorEmail;
     }
 }

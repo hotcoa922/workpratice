@@ -12,6 +12,11 @@
         SELECT * FROM Users WHERE email = #{email}
     </select>
 
+    <!-- 사용자 이름으로 사용자 조회 -->
+    <select id="findUserByUsername" parameterType="String" resultMap="userResultMap">
+        SELECT * FROM Users WHERE username = #{username}
+    </select>
+
     <!-- 생성 -->
     <insert id="insertUser" parameterType="com.example.microserviceuser.domain.Users" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO Users (username, email, password)

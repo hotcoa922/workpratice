@@ -17,6 +17,16 @@
         SELECT * FROM Roles WHERE roleName = #{roleName}
     </select>
 
+    <!-- ID로 역할 조회 -->
+    <select id="findRoleById" parameterType="Long" resultMap="roleResultMap">
+        SELECT * FROM Roles WHERE id = #{id}
+    </select>
+
+    <!-- 역할 이름으로 역할 조회 -->
+    <select id="findByRoleName" parameterType="String" resultMap="roleResultMap">
+        SELECT * FROM Roles WHERE roleName = #{roleName}
+    </select>
+
     <!-- 생성 -->
     <insert id="insertRole" parameterType="com.example.microserviceuser.domain.Roles" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO Roles (roleName)

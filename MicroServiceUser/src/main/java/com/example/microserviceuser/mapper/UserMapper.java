@@ -12,6 +12,9 @@ public interface UserMapper {
     @Select("SELECT * FROM Users")
     List<Users> findAllUsers();
 
+    @Select("SELECT * FROM Users WHERE username = #{username}")
+    Users findUserByUsername(@Param("username") String username);
+
     @Select("SELECT * FROM Users WHERE email = #{email}")
     Users findUserByEmail(String email);
 

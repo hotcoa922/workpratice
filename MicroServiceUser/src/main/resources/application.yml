@@ -22,5 +22,5 @@ eureka:
 
 
 jwt:
-  secret: ddkkkqoeoeoroieiskciwopwiqeairienmskdifgojasdhkjsdfahjkldfaskhjdalfsjklfhdasdafkshjldjkaflhsmnzxvicupo
+  secret: secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey
   expiration: 604800000

@@ -3,17 +3,23 @@ package com.example.microserviceuser.util;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public JwtAuthenticationProvider(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -21,16 +27,13 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         if (jwtTokenProvider.validateToken(token)) {
             String username = jwtTokenProvider.getUsernameFromJWT(token);
+            List<String> roles = jwtTokenProvider.getRolesFromJWT(token);
 
-            // JWT에서 권한 정보 가져오기
-            var roles = jwtTokenProvider.getRolesFromJWT(token);
-
-            // 유저 정보를 가져와서 Authentication 객체 생성 (권한 정보 포함)
-            UserDetails userDetails = jwtTokenProvider.getUserDetails(username, roles); // 권한 정보를 함께 전달
+            UserDetails userDetails = jwtTokenProvider.getUserDetails(username, roles);
             return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
         }
 
-        return null; // 토큰이 유효하지 않을 경우 인증 실패로 처리
+        throw new BadCredentialsException("Invalid token");
     }
 
     @Override

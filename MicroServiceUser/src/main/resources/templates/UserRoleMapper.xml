@@ -16,6 +16,25 @@
         WHERE u.email = #{email}
     </select>
 
+    <!-- 이메일로 사용자 역할 상세 조회 -->
+    <select id="findUserRoleByEmail" parameterType="String" resultType="com.example.microserviceuser.dto.UserRoleDetailDto">
+        SELECT ur.id AS id, ur.userId AS userId, ur.roleId AS roleId, r.roleName AS roleName
+        FROM UserRoles ur
+                 INNER JOIN Users u ON ur.userId = u.id
+                 INNER JOIN Roles r ON ur.roleId = r.id
+        WHERE u.email = #{email}
+    </select>
+
+    <!-- 사용자 ID로 사용자 역할 상세 조회 -->
+    <select id="findUserRolesByUserId" parameterType="Long" resultType="com.example.microserviceuser.dto.UserRoleDetailDto">
+        SELECT ur.id AS id, ur.userId AS userId, ur.roleId AS roleId, r.roleName AS roleName
+        FROM UserRoles ur
+                 INNER JOIN Roles r ON ur.roleId = r.id
+        WHERE ur.userId = #{userId}
+    </select>
+
+
+
     <!-- 생성 -->
     <insert id="insertUserRole" parameterType="com.example.microserviceuser.domain.UserRoles" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO UserRoles (userId, roleId)

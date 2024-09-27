@@ -7,18 +7,20 @@ import java.util.List;
 
 @Mapper
 public interface CommentMapper {
+
     @Select("SELECT * FROM Comments")
-    List<Comments> findAll();
+    List<Comments> findAllComments();
 
     @Select("SELECT * FROM Comments WHERE id = #{id}")
-    Comments findById(Long id);
+    Comments findCommentById(Long id);
 
-    @Insert("INSERT INTO Comments (postId, content, authorId) VALUES(#{postId}, #{content}, #{authorId})")
-    int insert(Comments comment);
+    @Insert("INSERT INTO Comments (postId, content, authorEmail) VALUES(#{postId}, #{content}, #{authorEmail})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int createComment(Comments comment);
 
-    @Update("UPDATE Comments SET content = #{content}, authorId = #{authorId} WHERE id = #{id}")
-    int update(Comments comment);
+    @Update("UPDATE Comments SET content = #{content} WHERE id = #{id}")
+    int updateComment(Comments comment);
 
     @Delete("DELETE FROM Comments WHERE id = #{id}")
-    int delete(Long id);
+    int deleteComment(Long id);
 }

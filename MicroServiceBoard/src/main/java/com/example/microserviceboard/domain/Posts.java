@@ -12,14 +12,14 @@ public class Posts extends BaseTime {
     private Long id;
     private String title;
     private String content;
-    private Long authorId;  // 작성자 ID
+    private String authorEmail;  // 작성자 ID
 
     @Builder
-    public Posts(String title, String content, Long authorId) {
+    public Posts(String title, String content, String authorEmail) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.authorId = authorId;
+        this.authorEmail = authorEmail;
     }
 
 }

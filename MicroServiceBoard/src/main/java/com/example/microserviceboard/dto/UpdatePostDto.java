@@ -8,13 +8,13 @@ public class UpdatePostDto {
     private long id;
     private String title;
     private String content;
-    private Long authorId;
+    private String authorEmail;
 
     @Builder
-    public UpdatePostDto(long id, String title, String content, Long authorId) {
+    public UpdatePostDto(long id, String title, String content, String authorEmail) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.authorId = authorId;
+        this.authorEmail = authorEmail;
     }
 }
