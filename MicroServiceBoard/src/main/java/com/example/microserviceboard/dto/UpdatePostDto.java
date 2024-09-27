@@ -5,16 +5,13 @@ import lombok.Data;
 
 @Data
 public class UpdatePostDto {
-    private long id;
+
     private String title;
     private String content;
-    private String authorEmail;
 
     @Builder
-    public UpdatePostDto(long id, String title, String content, String authorEmail) {
-        this.id = id;
+    public UpdatePostDto(String title, String content) {
         this.title = title;
         this.content = content;
-        this.authorEmail = authorEmail;
     }
 }

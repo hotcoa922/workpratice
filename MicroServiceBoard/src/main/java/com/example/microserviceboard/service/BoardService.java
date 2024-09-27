@@ -12,10 +12,10 @@ public interface BoardService {
     void createPost(CreatePostDto createPostDto);
 
     //수정
-    void updatePost(UpdatePostDto updatePostDto);
+    void updatePost(Long postId, UpdatePostDto updatePostDto);
 
     //삭제
-    void deletePost(Long postId, Long authorEmail);
+    void deletePost(Long postId);
 //
 //    //댓글 작성
 //    void createComment(CreateCommentDto createCommentDto);

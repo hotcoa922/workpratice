@@ -76,17 +76,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public void updatePost(UpdatePostDto updatePostDto) {
+    public void updatePost(Long postId, UpdatePostDto updatePostDto) {
 
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String token = (String) authentication.getCredentials();
-
-
-        UserDto userDto = userServiceClient.getUserById(updatePostDto.getauthorEmail());
-        if (userDto == null) {
-            throw new RuntimeException("작성자가 존재하지 않습니다.");
-        }
+        UserDto userDto = getAuthenticatedUser();
 
         // 작성자 권한 확인
         List<String> roles = userDto.getRoles();
@@ -94,27 +86,32 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 수정할 수 없습니다.");
         }
 
-        Posts post = postMapper.findById(updatePostDto.getId());
+        Posts post = postMapper.findPostById(postId);
         if(post == null){
             throw new RuntimeException("게시글이 존재하지 않습니다.");
         }
 
+        //작성자와 수정 요청자가 동일인인지 확인
+        if(!post.getAuthorEmail().equals(userDto.getEmail())){
+            throw new RuntimeException("게시글 작성자만 수정할 수 있습니다.");
+        }
+
         Posts updatePost = Posts.builder()
-                .title(post.getTitle())
-                .content(post.getContent())
+                .id(postId)
+                .title(updatePostDto.getTitle())
+                .content(updatePostDto.getContent())
                 .build();
 
         //수정
-        postMapper.update(updatePost);
+        postMapper.updatePost(updatePost);
 
     }
 
     @Override
-    public void deletePost(Long postId, Long authorEmail) {
-        UserDto userDto = userServiceClient.getUserById(authorEmail);
-        if (userDto == null) {
-            throw new RuntimeException("작성자가 존재하지 않습니다.");
-        }
+    @Transactional
+    public void deletePost(Long postId) {
+
+        UserDto userDto = getAuthenticatedUser();
 
         // 권한 확인
         List<String> roles = userDto.getRoles();
@@ -122,12 +119,18 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 삭제할 수 없습니다.");
         }
 
-        Posts post = postMapper.findById(postId);
+        Posts post = postMapper.findPostById(postId);
         if(post == null){
             throw new RuntimeException("게시글이 존재하지 않습니다.");
         }
+
+        //작성자와 수정 요청자가 동일인인지 확인
+        if(!post.getAuthorEmail().equals(userDto.getEmail())){
+            throw new RuntimeException("게시글 작성자만 삭제할 수 있습니다.");
+        }
+
         // 게시글 삭제
-        postMapper.delete(postId);
+        postMapper.deletePost(postId);
     }
 //
 //    @Override

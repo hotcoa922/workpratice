@@ -9,8 +9,6 @@ import com.example.microserviceboard.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -53,10 +51,10 @@ public class BoardController {
 
     // 게시물 수정 (로그인 O)
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/post")
-    public ResponseEntity<String> updatePost(@RequestBody UpdatePostDto updatePostDto) {
+    @PutMapping("/post/{postId}")
+    public ResponseEntity<String> updatePost(@PathVariable Long postId, @RequestBody UpdatePostDto updatePostDto) {
         try {
-            boardService.updatePost(updatePostDto);
+            boardService.updatePost(postId, updatePostDto);
             return ResponseEntity.ok("게시물이 성공적으로 수정되었습니다.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,10 +63,10 @@ public class BoardController {
 
     // 게시물 삭제 (로그인 O)
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/post/{postId}/{authorEmail}")
-    public ResponseEntity<String> deletePost(@PathVariable Long postId, @PathVariable Long authorEmail) {
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postId) {
         try {
-            boardService.deletePost(postId, authorEmail);
+            boardService.deletePost(postId);
             return ResponseEntity.ok("게시물이 성공적으로 삭제되었습니다.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
