@@ -11,10 +11,10 @@ public class Comments extends BaseTime {
     private Long id;
     private Long postId;    //외래키
     private String content;
-    private Long authorEmail;
+    private String authorEmail;
 
     @Builder
-    public Comments(Long postId, String content, Long authorEmail) {
+    public Comments(Long id, Long postId, String content, String authorEmail) {
         this.id = id;
         this.postId = postId;
         this.content = content;

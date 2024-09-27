@@ -16,15 +16,15 @@ public interface BoardService {
 
     //삭제
     void deletePost(Long postId);
-//
-//    //댓글 작성
-//    void createComment(CreateCommentDto createCommentDto);
-//
-//    //수정
-//    void updateComment(UpdateCommentDto updateCommentDto);
-//
-//    //삭제
-//    void deleteComment(Long commentId, Long authorEmail);
+
+    //댓글 작성
+    void createComment(Long postId, CreateCommentDto createCommentDto);
+
+    //수정
+    void updateComment(Long postId, Long commentId, UpdateCommentDto updateCommentDto);
+
+    //삭제
+    void deleteComment(Long commentId);
 
 
 }

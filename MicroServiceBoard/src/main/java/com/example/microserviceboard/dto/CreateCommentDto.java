@@ -8,12 +8,10 @@ import lombok.Data;
 public class CreateCommentDto {
     private Long postId;
     private String content;
-    private String authorEmail;
 
     @Builder
-    public CreateCommentDto(Long postId, String content, String authorEmail) {
+    public CreateCommentDto(Long postId, String content) {
         this.postId = postId;
         this.content = content;
-        this.authorEmail = authorEmail;
     }
 }

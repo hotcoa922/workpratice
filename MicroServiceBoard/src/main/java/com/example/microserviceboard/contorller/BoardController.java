@@ -72,42 +72,42 @@ public class BoardController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-//
-//    // 댓글 생성 (로그인 O)
-//    @PreAuthorize("isAuthenticated()")
-//    @PostMapping("/comment")
-//    public ResponseEntity<String> createComment(@RequestBody CreateCommentDto createCommentDto) {
-//        try {
-//            boardService.createComment(createCommentDto);
-//            return ResponseEntity.ok("댓글이 성공적으로 생성되었습니다.");
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    // 댓글 수정 (로그인 O)
-//    @PreAuthorize("isAuthenticated()")
-//    @PutMapping("/comment")
-//    public ResponseEntity<String> updateComment(@RequestBody UpdateCommentDto updateCommentDto) {
-//        try {
-//            boardService.updateComment(updateCommentDto);
-//            return ResponseEntity.ok("댓글이 성공적으로 수정되었습니다.");
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    // 댓글 삭제 (로그인 O)
-//    @PreAuthorize("isAuthenticated()")
-//    @DeleteMapping("/comment/{commentId}/{authorEmail}")
-//    public ResponseEntity<String> deleteComment(@PathVariable Long commentId, @PathVariable Long authorEmail) {
-//        try {
-//            boardService.deleteComment(commentId, authorEmail);
-//            return ResponseEntity.ok("댓글이 성공적으로 삭제되었습니다.");
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+
+    // 댓글 생성 (로그인 O)
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/post/{postId}/comment")
+    public ResponseEntity<String> createComment(@PathVariable Long postId, @RequestBody CreateCommentDto createCommentDto) {
+        try {
+            boardService.createComment(postId, createCommentDto);
+            return ResponseEntity.ok("댓글이 성공적으로 생성되었습니다.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // 댓글 수정 (로그인 O)
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/post/{postId}/comment/{commentId}")
+    public ResponseEntity<String> updateComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody UpdateCommentDto updateCommentDto) {
+        try {
+            boardService.updateComment(postId, commentId, updateCommentDto);
+            return ResponseEntity.ok("댓글이 성공적으로 수정되었습니다.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // 댓글 삭제 (로그인 O)
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/post/{postId}/comment/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long postId, @PathVariable Long commentId)  {
+        try {
+            boardService.deleteComment(commentId);
+            return ResponseEntity.ok("댓글이 성공적으로 삭제되었습니다.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 
 }

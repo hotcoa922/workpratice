@@ -132,66 +132,80 @@ public class BoardServiceImpl implements BoardService {
         // 게시글 삭제
         postMapper.deletePost(postId);
     }
-//
-//    @Override
-//    public void createComment(CreateCommentDto createCommentDto) {
-//        UserDto userDto = userServiceClient.getUserById(createCommentDto.getauthorEmail());
-//        if (userDto == null) {
-//            throw new RuntimeException("작성자가 존재하지 않습니다.");
-//        }
-//
-//        // 작성자 권한 확인
-//        List<String> roles = userDto.getRoles();
-//        if (roles.contains("TEMP_SUSP_AUTH") || roles.contains("PERM_SUSP_AUTH")) {
-//            throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 수정할 수 없습니다.");
-//        }
-//
-//        Comments comment = Comments.builder()
-//                .content(createCommentDto.getContent())
-//                .authorEmail(createCommentDto.getauthorEmail())
-//                .postId(createCommentDto.getPostId())
-//                .build();
-//    }
-//
-//    @Override
-//    public void updateComment(UpdateCommentDto updateCommentDto) {
-//        UserDto userDto = userServiceClient.getUserById(updateCommentDto.getauthorEmail());
-//        if (userDto == null) {
-//            throw new RuntimeException("작성자가 존재하지 않습니다.");
-//        }
-//
-//        // 작성자 권한 확인
-//        List<String> roles = userDto.getRoles();
-//        if (roles.contains("TEMP_SUSP_AUTH") || roles.contains("PERM_SUSP_AUTH")) {
-//            throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 수정할 수 없습니다.");
-//        }
-//
-//        Comments updateComment = Comments.builder()
-//                .content(updateCommentDto.getContent())
-//                .build();
-//
-//    }
-//
-//    @Override
-//    public void deleteComment(Long commentId, Long authorEmail) {
-//        UserDto userDto = userServiceClient.getUserById(authorEmail);
-//        if (userDto == null) {
-//            throw new RuntimeException("작성자가 존재하지 않습니다.");
-//        }
-//
-//        // 권한 확인
-//        List<String> roles = userDto.getRoles();
-//        if (roles.contains("TEMP_SUSP_AUTH") || roles.contains("PERM_SUSP_AUTH")) {
-//            throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 삭제할 수 없습니다.");
-//        }
-//
-//        Posts post = postMapper.findById(commentId);
-//        if(post == null){
-//            throw new RuntimeException("게시글이 존재하지 않습니다.");
-//        }
-//        // 게시글 삭제
-//        postMapper.delete(commentId);
-//    }
+
+    @Override
+    @Transactional
+    public void createComment(Long postId, CreateCommentDto createCommentDto) {
+
+        UserDto userDto = getAuthenticatedUser();
+
+        // 작성자 권한 확인
+        List<String> roles = userDto.getRoles();
+        if (roles.contains("TEMP_SUSP_AUTH") || roles.contains("PERM_SUSP_AUTH")) {
+            throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 수정할 수 없습니다.");
+        }
+
+        Comments comment = Comments.builder()
+                .postId(postId)
+                .content(createCommentDto.getContent())
+                .authorEmail(userDto.getEmail())
+                .build();
+
+        //작성
+        commentMapper.createComment(comment);
+    }
+
+    @Override
+    @Transactional
+    public void updateComment(Long postId, Long commentId, UpdateCommentDto updateCommentDto) {
+
+        UserDto userDto = getAuthenticatedUser();
+
+        // 작성자 권한 확인
+        List<String> roles = userDto.getRoles();
+        if (roles.contains("TEMP_SUSP_AUTH") || roles.contains("PERM_SUSP_AUTH")) {
+            throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 수정할 수 없습니다.");
+        }
+
+        Comments comment = commentMapper.findCommentById(commentId);
+        if(comment == null){
+            throw new RuntimeException("댓글이 존재하지 않습니다.");
+        }
+        if(!userDto.getEmail().equals(comment.getAuthorEmail())){
+            throw new RuntimeException("댓글 작성자만 수정 가능합니다.");
+        }
+
+        Comments updateComment = Comments.builder()
+                .id(commentId)
+                .postId(postId)
+                .content(updateCommentDto.getContent())
+                .build();
+
+        commentMapper.updateComment(updateComment);
+
+    }
+
+    @Override
+    public void deleteComment(Long commentId) {
+
+        UserDto userDto = getAuthenticatedUser();
+
+        // 권한 확인
+        List<String> roles = userDto.getRoles();
+        if (roles.contains("TEMP_SUSP_AUTH") || roles.contains("PERM_SUSP_AUTH")) {
+            throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 삭제할 수 없습니다.");
+        }
+
+        Comments comment = commentMapper.findCommentById(commentId);
+        if(comment == null){
+            throw new RuntimeException("댓글이 존재하지 않습니다.");
+        }
+        if(!userDto.getEmail().equals(comment.getAuthorEmail())){
+            throw new RuntimeException("댓글 작성자만 수정 가능합니다.");
+        }
+        // 게시글 삭제
+        commentMapper.deleteComment(commentId);
+    }
 
 
 }
