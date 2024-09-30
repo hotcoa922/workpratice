@@ -66,6 +66,32 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/tempben")
+    public ResponseEntity<String> giveTempBen(@RequestBody Long targetId){
+        try{
+            userService.tempSuspendRole(targetId);
+            return ResponseEntity.ok("대상자 임시정지 완료");
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/permben")
+    public ResponseEntity<String> givePermBen(@RequestBody Long targetId){
+        try{
+            userService.permSuspendRole(targetId);
+            return ResponseEntity.ok("대상자 영구정지 완료");
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+
+
+
     // 로그아웃
 //    @PostMapping("/logout")
 //    public ResponseEntity<Void> logout() {

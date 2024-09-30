@@ -28,6 +28,4 @@ public interface UserService {
     //영구정지
     void permSuspendRole(Long userId);
 
-    //관리자부여
-    void grantAdminRole(Long userId);
 }

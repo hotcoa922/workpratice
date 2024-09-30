@@ -56,10 +56,43 @@
 
     <!-- 사용자가 관리자 권한 가지고 있는지 체크, 없으면 0 -->
     <select id="existAdminRole" parameterType="String" resultType="boolean">
-        SELECT COUNT(*)
+        SELECT COUNT(*) > 0
         FROM USERROLES UR
         INNER JOIN USERS U ON UR.USERID = U.id
         INNER JOIN ROLES R ON UR.ROLEID = R.id
         WHERE U.EMAIL = #{email} AND r.roleName = 'ADMIN_AUTH'
     </select>
+
+    <!-- 사용자가 임시정지 인지 체크, 없으면 0 -->
+    <select id="existTempSuspendRole" parameterType="String" resultType="boolean">
+        SELECT COUNT(*) > 0 /*이렇게 해야 boolean이용 가능*/
+        FROM USERROLES UR
+        INNER JOIN USERS U ON UR.USERID = U.id
+        INNER JOIN ROLES R ON UR.ROLEID = R.id
+        WHERE U.EMAIL = #{email} AND r.roleName = 'TEMP_SUSP_AUTH'
+    </select>
+
+    <!-- 임시 정지된 시간 조회-->
+    <select id="findTimeById" parameterType="Long" resultType="java.time.LocalDateTime">
+        SELECT createdDate
+        FROM USERROLES
+        WHERE USERID = #{userId} AND roleId = (SELECT id FROM ROLES WHERE roleName = 'TEMP_SUSP_AUTH')
+    </select>
+
+    <!-- TEMP_SUSP_AUTH 권한을 가진 사용자 조회 -->
+    <select id="findUsersWithTempSuspendRole" resultType="com.example.microserviceuser.domain.Users">
+        SELECT u.*
+        FROM Users u
+        INNER JOIN UserRoles ur ON u.id = ur.userId
+        INNER JOIN Roles r ON ur.roleId = r.id
+        WHERE r.roleName = 'TEMP_SUSP_AUTH'
+    </select>
+
+    <delete id="deleteUserRoleByUserIdAndRole" parameterType="map">
+        DELETE FROM UserRoles
+        WHERE userId = #{userId}
+        AND roleId = (SELECT id FROM Roles WHERE roleName = #{roleName})
+    </delete>
+
+
 </mapper>

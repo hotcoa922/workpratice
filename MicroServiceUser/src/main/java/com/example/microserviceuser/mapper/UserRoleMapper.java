@@ -5,6 +5,7 @@ import com.example.microserviceuser.domain.Users;
 import com.example.microserviceuser.dto.UserRoleDetailDto;
 import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -38,10 +39,28 @@ public interface UserRoleMapper {
     @Delete("DELETE FROM UserRoles WHERE id = #{id}")
     void deleteUserRole(Long id);
 
-    @Select("SELECT COUNT(*)" +
+    @Select("SELECT COUNT(*) > 0 " +
         "FROM USERROLES UR "+
         "INNER JOIN USERS U ON UR.USERID = U.id " +
         "INNER JOIN ROLES R ON UR.ROLEID = R.id " +
         "WHERE U.EMAIL = #{email} AND r.roleName = 'ADMIN_AUTH'")
     boolean existAdminRole(@Param("email")String email);
+
+    @Select("SELECT COUNT(*) > 0 " +
+            "FROM USERROLES UR "+
+            "INNER JOIN USERS U ON UR.USERID = U.id " +
+            "INNER JOIN ROLES R ON UR.ROLEID = R.id " +
+            "WHERE U.EMAIL = #{email} AND r.roleName = 'TEMP_SUSP_AUTH'")
+    boolean existTempSuspendRole(@Param("email")String email);
+
+    @Select("SELECT createdDate "+
+            "FROM USERROLES "+
+            "WHERE USERID = #{userId} AND roleId = (SELECT id FROM ROLES WHERE roleName = 'TEMP_SUSP_AUTH')")
+    LocalDateTime findTimeById(@Param("userId")Long id);
+
+    @Delete("DELETE FROM UserRoles\n" +
+            "WHERE userId = #{userId} \n " +
+            "AND roleId = (SELECT id FROM Roles WHERE roleName = #{roleName})")
+    void deleteUserRoleByUserIdAndRole(@Param("userId") Long userId, @Param("roleName") String roleName);
+
 }

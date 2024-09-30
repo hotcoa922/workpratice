@@ -12,11 +12,14 @@ public interface UserMapper {
     @Select("SELECT * FROM Users")
     List<Users> findAllUsers();
 
+    @Select("SELECT * FROM Users WHERE id = #{id}")
+    Users findUserById(@Param("id") Long id);
+
     @Select("SELECT * FROM Users WHERE username = #{username}")
     Users findUserByUsername(@Param("username") String username);
 
     @Select("SELECT * FROM Users WHERE email = #{email}")
-    Users findUserByEmail(String email);
+    Users findUserByEmail(@Param("email")String email);
 
     @Insert("INSERT INTO Users (username, email, password) " +
             "VALUES (#{username}, #{email}, #{password})")
@@ -30,4 +33,11 @@ public interface UserMapper {
 
     @Delete("DELETE FROM Users WHERE id = #{id}")
     void deleteUser(Long id);
+
+    @Select("SELECT u.* " +
+            "FROM Users u " +
+            "INNER JOIN UserRoles ur ON u.id = ur.userId " +
+            "INNER JOIN Roles r ON ur.roleId = r.id "+
+            "WHERE r.roleName = 'TEMP_SUSP_AUTH'")
+    List<Users> findUsersWithTempSuspendRole( );
 }

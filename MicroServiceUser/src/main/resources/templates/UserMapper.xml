@@ -8,6 +8,10 @@
         SELECT * FROM Users
     </select>
 
+    <select id="findUserById" parameterType="Long" resultType="com.example.microserviceuser.domain.Users">
+        SELECT * FROM Users WHERE id = #{id}
+    </select>
+
     <select id="findUserByEmail" parameterType="String" resultType="com.example.microserviceuser.domain.Users">
         SELECT * FROM Users WHERE email = #{email}
     </select>
