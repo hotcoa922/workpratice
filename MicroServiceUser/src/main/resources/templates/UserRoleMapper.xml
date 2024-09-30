@@ -52,4 +52,14 @@
     <delete id="deleteUserRole" parameterType="Long">
         DELETE FROM UserRoles WHERE id = #{id}
     </delete>
+
+
+    <!-- 사용자가 관리자 권한 가지고 있는지 체크, 없으면 0 -->
+    <select id="existAdminRole" parameterType="String" resultType="boolean">
+        SELECT COUNT(*)
+        FROM USERROLES UR
+        INNER JOIN USERS U ON UR.USERID = U.id
+        INNER JOIN ROLES R ON UR.ROLEID = R.id
+        WHERE U.EMAIL = #{email} AND r.roleName = 'ADMIN_AUTH'
+    </select>
 </mapper>

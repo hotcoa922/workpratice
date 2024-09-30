@@ -8,9 +8,12 @@ import com.example.microserviceuser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -50,12 +53,25 @@ public class UserController {
         return ResponseEntity.ok(token);  // 로그인 성공 시 JWT 토큰 반환
     }
 
-    // 로그아웃
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout() {
-        userService.logout();
-        return new ResponseEntity<>(HttpStatus.OK);
+    //관리자 권한 받기
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/secret")
+    public ResponseEntity<String> tryAdmin(@RequestBody Map<String, String> secretCodeMap){ //JSON 형식으로 전달된 데이터를 올바르게 처리하기 위함
+        try {
+            String secretCode = secretCodeMap.get("secretCode");
+            userService.tryAdminAuth(secretCode);
+            return ResponseEntity.ok("관리자 권한이 부여되었습니다.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
+    // 로그아웃
+//    @PostMapping("/logout")
+//    public ResponseEntity<Void> logout() {
+//        userService.logout();
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
 
 }

@@ -13,10 +13,14 @@ import com.example.microserviceuser.mapper.UserMapper;
 import com.example.microserviceuser.mapper.UserRoleMapper;
 import com.example.microserviceuser.util.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -119,21 +123,68 @@ public class UserServiceImpl implements UserService {
         return jwtTokenProvider.generateToken(user.getUsername(), roleNames);
     }
 
+
+    //관리자 권한 받기
     @Override
-    public void logout() {
+    @Transactional
+    public void tryAdminAuth(String secretCode) {
+        // 현재 인증된 사용자 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("인증되지 않은 사용자입니다.");
+        }
+
+        // UserDetails로 사용자 정보 가져오기(여유되면 Principal로 재구현)
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
+        // 사용자 정보 가져오기 (username으로 DB에서 조회)
+        Users user = userMapper.findUserByUsername(username);
+
+        if(secretCode.equals("qwer1234!")){
+
+            // 관리자 권한 부여
+            Roles adminRole = roleMapper.findByRoleName(RoleType.ADMIN_AUTH.name());
+
+            boolean checkAlreadyHasAdminRole = userRoleMapper.existAdminRole(user.getEmail());
+
+            if(!checkAlreadyHasAdminRole){
+                UserRoles userRole = UserRoles.builder()
+                        .userId(user.getId())
+                        .roleId(adminRole.getId())
+                        .build();
+                userRoleMapper.insertUserRole(userRole);
+                System.out.println("관리자 권한 부여 완료");
+
+            }else{
+                throw new RuntimeException("이미 관리자 권한을 소유중입니다.");
+            }
+        }
+        else{
+
+            throw new RuntimeException("잘못된 시크릿코드 입니다. 전달된 코드:" + secretCode);
+        }
 
     }
 
+//    @Override
+//    public void logout() {
+//
+//    }
+
+    //관리자 권한을 가지고 있는 유저가 일반 유저에게 임시정지
     @Override
     public void tempSuspendRole(Long userId) {
 
     }
 
+    //관리자 권한을 가지고 있는 유저가 일반 유저에게 영구정지
     @Override
     public void permSuspendRole(Long userId) {
 
     }
 
+    //관리자 권한 부여
     @Override
     public void grantAdminRole(Long userId) {
 

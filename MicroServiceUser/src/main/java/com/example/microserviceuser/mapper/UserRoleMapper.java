@@ -10,10 +10,6 @@ import java.util.List;
 @Mapper
 public interface UserRoleMapper {
 
-    @Select("SELECT * FROM UserRoles")
-    List<UserRoles> findAllUserRoles(); //모든 사용자 역할(UserRoles) 데이터를 조회
-
-
     @Select("SELECT ur.userId, ur.roleId, r.roleName " +
             "FROM UserRoles ur " +
             "INNER JOIN Users u ON ur.userId = u.id " +
@@ -41,4 +37,11 @@ public interface UserRoleMapper {
 
     @Delete("DELETE FROM UserRoles WHERE id = #{id}")
     void deleteUserRole(Long id);
+
+    @Select("SELECT COUNT(*)" +
+        "FROM USERROLES UR "+
+        "INNER JOIN USERS U ON UR.USERID = U.id " +
+        "INNER JOIN ROLES R ON UR.ROLEID = R.id " +
+        "WHERE U.EMAIL = #{email} AND r.roleName = 'ADMIN_AUTH'")
+    boolean existAdminRole(@Param("email")String email);
 }
