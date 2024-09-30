@@ -98,9 +98,6 @@ public class UserServiceImpl implements UserService {
         // JWT 토큰 발급
         List<String> roles = Collections.singletonList(role.getRoleName().name());
         String token = jwtTokenProvider.generateToken(user.getUsername(), roles);
-
-        // JWT 토큰 콘솔 출력
-        System.out.println("JWT Token: " + token);
     }
 
     @Override
@@ -182,7 +179,7 @@ public class UserServiceImpl implements UserService {
                         .roleId(adminRole.getId())
                         .build();
                 userRoleMapper.insertUserRole(userRole);
-                System.out.println("관리자 권한 부여 완료");
+                logger.info("관리자 권한 부여 완료: {}", user.getUsername());
 
             }else{
                 throw new RuntimeException("이미 관리자 권한을 소유중입니다.");
@@ -212,12 +209,14 @@ public class UserServiceImpl implements UserService {
         //임시정지 대상 조회
         Users targetUser = userMapper.findUserById(targetUserId);
         if (targetUser == null) {
+            logger.warn("잘못된 대상: {}", targetUserId);
             throw new RuntimeException("잘못된 대상입니다.");
         }
 
         //이미 임시 정지 상태인지 확인
         boolean checkTempSuspended = userRoleMapper.existTempSuspendRole(targetUser.getEmail());
         if (checkTempSuspended) {
+            logger.warn("{}는 이미 임시 정지 상태입니다", targetUser.getUsername());
             throw new RuntimeException("해당 사용자는 이미 임시 정지 상태입니다.");
         }
 
@@ -228,6 +227,7 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRoleMapper.insertUserRole(userRole);
 
+        logger.info("{}는 24시간동안 임시 정지입니다", targetUser.getUsername());
 
     }
 
@@ -272,6 +272,7 @@ public class UserServiceImpl implements UserService {
         //임시정지 대상 조회
         Users targetUser = userMapper.findUserById(targetUserId);
         if (targetUser == null) {
+            logger.warn("잘못된 대상: {}", targetUserId);
             throw new RuntimeException("잘못된 대상입니다.");
         }
 
@@ -282,6 +283,6 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRoleMapper.insertUserRole(userRole);
 
+        logger.info("{}는 영구 정지입니다", targetUser.getUsername());
     }
-
 }

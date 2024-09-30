@@ -18,8 +18,10 @@ public class LoggingAspect {
 
 
     @Around("execution(* com.example.microserviceuser.service.UserServiceImpl.registerUser(..)) ||" +
-            "execution(* com.example.microserviceuser.service.UserServiceImpl.login(..))"
-            )
+            "execution(* com.example.microserviceuser.service.UserServiceImpl.login(..)) " +
+            "execution(* com.example.microserviceuser.service.UserServiceImpl.tryAdminAuth(..)) ||" +
+            "execution(* com.example.microserviceuser.service.UserServiceImpl.tempSuspendRole(..)) ||" +
+            "execution(* com.example.microserviceuser.service.UserServiceImpl.permSuspendRole(..)) ||")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         //ProceedingJoinPoint는 AOP에서 타겟 메서드(Advice가 적용된 메서드)에 대한 정보를 제공하고, 해당 메서드의 실행을 제어하는 기능을 제공
 
