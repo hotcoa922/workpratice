@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -206,6 +207,22 @@ public class BoardServiceImpl implements BoardService {
         // 게시글 삭제
         commentMapper.deleteComment(commentId);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostsDto> getAllPosts() {
+        List<Posts> posts = postMapper.findAllPosts();
+
+        return posts.stream()
+                .map(post -> PostsDto.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .authorEmail(post.getAuthorEmail())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 
 
 }

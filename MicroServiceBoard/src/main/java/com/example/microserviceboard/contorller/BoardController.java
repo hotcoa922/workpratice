@@ -1,15 +1,14 @@
 package com.example.microserviceboard.contorller;
 
 
-import com.example.microserviceboard.dto.CreateCommentDto;
-import com.example.microserviceboard.dto.CreatePostDto;
-import com.example.microserviceboard.dto.UpdateCommentDto;
-import com.example.microserviceboard.dto.UpdatePostDto;
+import com.example.microserviceboard.dto.*;
 import com.example.microserviceboard.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/board")
@@ -21,20 +20,6 @@ public class BoardController {
     public BoardController(BoardService boardService) {
         this.boardService = boardService;
     }
-
-//    // 게시물 전체 조회 (로그인 필요 없음)
-//    @GetMapping("/posts")
-//    public ResponseEntity<List<PostsDto>> getAllPosts() {
-//        List<PostsDto> posts = boardService.getAllPosts();
-//        return ResponseEntity.ok(posts);
-//    }
-
-//    // 개별 게시물 조회 (로그인 필요 없음)
-//    @GetMapping("/post/{postId}")
-//    public ResponseEntity<PostsDto> getPostById(@PathVariable Long postId) {
-//        PostsDto post = boardService.getPostById(postId);
-//        return ResponseEntity.ok(post);
-//    }
 
 
     // 게시물 생성 (로그인 O)
@@ -107,6 +92,13 @@ public class BoardController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // 게시물 전체 조회(로그인 X)
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostsDto>> getAllPosts() {
+        List<PostsDto> posts = boardService.getAllPosts();
+        return ResponseEntity.ok(posts);
     }
 
 

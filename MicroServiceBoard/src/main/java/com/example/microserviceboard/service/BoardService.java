@@ -1,9 +1,8 @@
 package com.example.microserviceboard.service;
 
-import com.example.microserviceboard.dto.CreateCommentDto;
-import com.example.microserviceboard.dto.CreatePostDto;
-import com.example.microserviceboard.dto.UpdateCommentDto;
-import com.example.microserviceboard.dto.UpdatePostDto;
+import com.example.microserviceboard.dto.*;
+
+import java.util.List;
 
 public interface BoardService {
 
@@ -25,6 +24,9 @@ public interface BoardService {
 
     //삭제
     void deleteComment(Long commentId);
+
+    //전체 조회
+    List<PostsDto> getAllPosts();
 
 
 }
