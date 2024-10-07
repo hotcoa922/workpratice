@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+
 public class UserDto {
     private Long id;                // 사용자 ID (필요한 경우)
     private String username;        // 사용자 이름

@@ -46,11 +46,15 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);  // 회원가입 성공 시 201 Created 응답
     }
 
-    // 로그인
+    // 로그인 엔드포인트
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
-        String token = userService.login(loginDto);
-        return ResponseEntity.ok(token);  // 로그인 성공 시 JWT 토큰 반환
+        try {
+            String token = userService.login(loginDto);
+            return ResponseEntity.ok(token); // JWT 토큰 반환
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
     //관리자 권한 받기

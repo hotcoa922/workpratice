@@ -8,19 +8,19 @@ public interface BoardService {
 
 
     //게시글 작성
-    void createPost(CreatePostDto createPostDto);
+    void createPost(CreatePostDto createPostDto, String email, String rolesHeader);
 
     //수정
-    void updatePost(Long postId, UpdatePostDto updatePostDto);
+    void updatePost(Long postId, UpdatePostDto updatePostDto, String email, String rolesHeader);
 
     //삭제
     void deletePost(Long postId);
 
     //댓글 작성
-    void createComment(Long postId, CreateCommentDto createCommentDto);
+    void createComment(Long postId, CreateCommentDto createCommentDto, String email, String rolesHeader);
 
     //수정
-    void updateComment(Long postId, Long commentId, UpdateCommentDto updateCommentDto);
+    void updateComment(Long postId, Long commentId, UpdateCommentDto updateCommentDto, String email, String rolesHeader);
 
     //삭제
     void deleteComment(Long commentId);

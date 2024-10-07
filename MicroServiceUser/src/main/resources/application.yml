@@ -5,7 +5,7 @@ spring:
   application:
     name: MicroServiceUser
   datasource:
-    url: jdbc:mariadb://localhost:3306/userservice
+    url: jdbc:mariadb://localhost:3306/userservice?useUnicode=true&characterEncoding=utf8mb4
     username: admin123
     password: admin123
     driver-class-name: org.mariadb.jdbc.Driver

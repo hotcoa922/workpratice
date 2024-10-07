@@ -97,11 +97,12 @@ public class UserServiceImpl implements UserService {
 
         // JWT 토큰 발급
         List<String> roles = Collections.singletonList(role.getRoleName().name());
-        String token = jwtTokenProvider.generateToken(user.getUsername(), roles);
+        String token = jwtTokenProvider.generateToken(user.getUsername(), user.getEmail(), roles);
     }
 
     @Override
     public String login(LoginDto loginDto) {
+        // 사용자 조회
         Users user = userMapper.findUserByEmail(loginDto.getEmail());
         if (user == null) {
             throw new RuntimeException("사용자가 존재하지 않습니다.");
@@ -123,7 +124,9 @@ public class UserServiceImpl implements UserService {
                 .map(UserRoleDetailDto::getRoleName)
                 .collect(Collectors.toList());
 
-        return jwtTokenProvider.generateToken(user.getUsername(), roleNames);
+        // JWT 토큰 생성 - 이메일 정보 포함
+        String token = jwtTokenProvider.generateToken(user.getUsername(), user.getEmail(), roleNames);
+        return token;
     }
 
     //    @Override
