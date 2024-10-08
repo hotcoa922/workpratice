@@ -1,5 +1,6 @@
-package com.example.eurekagateway.util;
+package com.example.eurekagateway.filter;
 
+import com.example.eurekagateway.util.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;

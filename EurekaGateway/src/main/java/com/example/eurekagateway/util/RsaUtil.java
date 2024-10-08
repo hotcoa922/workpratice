@@ -1,65 +1,59 @@
 package com.example.eurekagateway.util;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+
+import java.security.*;
+
 import java.util.Base64;
 
 
-@Slf4j
-@AllArgsConstructor
+/*
+ RSA암호화 및 복호화에 필요한 유틸리티 메소드
+ */
+@Component
 public class RsaUtil {
 
-    private final PublicKey publicKey;
-    private final PrivateKey privateKey;
+    private KeyPair keyPair;
 
-
-    public RsaUtil(String publicKeyStr, String privateKeyStr) throws Exception {
-        this.publicKey = getPublicKey(publicKeyStr);
-        this.privateKey = getPrivateKey(privateKeyStr);
+    //RSA 키 페어 생성
+    @PostConstruct
+    public void init() throws NoSuchAlgorithmException {
+        // RSA 키 페어 생성
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048); // 키 크기 설정
+        keyPair = keyPairGenerator.generateKeyPair();
     }
 
-
-    //GPT활용
-
-    // Base64로 인코딩된 공개키를 PublicKey 객체로 변환
-    private PublicKey getPublicKey(String publicKeyStr) throws Exception {
-        byte[] keyBytes = Base64.getDecoder().decode(publicKeyStr);
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePublic(spec);
+    // 공개 키 반환 (Base64 인코딩)
+    public String getPublicKey() {
+        PublicKey publicKey = keyPair.getPublic();
+        return Base64.getEncoder().encodeToString(publicKey.getEncoded());
     }
 
-    // Base64로 인코딩된 개인키를 PrivateKey 객체로 변환
-    private PrivateKey getPrivateKey(String privateKeyStr) throws Exception {
-        byte[] keyBytes = Base64.getDecoder().decode(privateKeyStr);
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePrivate(spec);
+    // 개인 키 반환 (내부에서만 사용)
+    private PrivateKey getPrivateKey() {
+        return keyPair.getPrivate();
     }
 
-
-    // 데이터 암호화
-    public String encrypt(String data) throws Exception {
+    // 암호화 메서드 (사용하지 않음, 클라이언트에서 사용)
+    public String encrypt(String plainText) throws Exception {
+        PublicKey publicKey = keyPair.getPublic();
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        byte[] encryptedBytes = cipher.doFinal(data.getBytes());
+        byte[] encryptedBytes = cipher.doFinal(plainText.getBytes("UTF-8"));
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    // 데이터 복호화
-    public String decrypt(String encryptedData) throws Exception {
+    // 복호화 메서드
+    public String decrypt(String encryptedText) throws Exception {
+        PrivateKey privateKey = getPrivateKey();
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
-        return new String(decryptedBytes);
+        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
+        return new String(decryptedBytes, "UTF-8");
     }
-
 }

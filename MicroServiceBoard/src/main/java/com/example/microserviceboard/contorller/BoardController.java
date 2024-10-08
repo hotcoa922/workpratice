@@ -64,9 +64,12 @@ public class BoardController {
     @Secured({"USER_AUTH", "ADMIN_AUTH"})
     @DeleteMapping("/post/{postId}")
     @RSADecrypt(RSADecrypt.class)
-    public ResponseEntity<String> deletePost(@PathVariable Long postId) {
+    public ResponseEntity<String> deletePost(
+            @PathVariable Long postId,
+            @RequestHeader String email,
+            @RequestHeader String rolesHeader) {
         try {
-            boardService.deletePost(postId);
+            boardService.deletePost(postId, email, rolesHeader);
             return ResponseEntity.ok("게시물이 성공적으로 삭제되었습니다.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -114,9 +117,11 @@ public class BoardController {
     @RSADecrypt(RSADecrypt.class)
     public ResponseEntity<String> deleteComment(
             @PathVariable Long postId,
-            @PathVariable Long commentId)  {
+            @PathVariable Long commentId,
+            @RequestHeader String email,
+            @RequestHeader String rolesHeader)  {
         try {
-            boardService.deleteComment(commentId);
+            boardService.deleteComment(commentId, email, rolesHeader);
             return ResponseEntity.ok("댓글이 성공적으로 삭제되었습니다.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

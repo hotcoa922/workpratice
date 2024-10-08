@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RSADecrypt {
-    Class<?>[] value(); // 복호화 대상 클래스 타입을 지정하는 속성
+    Class<?>[] value(); // 복호화된 데이터를 매핑할 클래스
 }
 
 /*
@@ -17,4 +17,3 @@ public @interface RSADecrypt {
 
  */
 
-//즉 @RSADecrypt에서 @RSADecryptField가 붙은 필드를 복호화!

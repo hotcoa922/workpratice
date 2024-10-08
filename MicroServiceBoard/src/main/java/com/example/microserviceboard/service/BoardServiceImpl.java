@@ -149,7 +149,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, String email, String rolesHeader) {
 
 //        UserDto userDto = getAuthenticatedUser();
 
@@ -158,6 +158,12 @@ public class BoardServiceImpl implements BoardService {
 //        if (roles.contains("TEMP_SUSP_AUTH") || roles.contains("PERM_SUSP_AUTH")) {
 //            throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 삭제할 수 없습니다.");
 //        }
+
+        List<String> roles = Arrays.asList(rolesHeader.split(","));
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .roles(roles)
+                .build();
 
         Posts post = postMapper.findPostById(postId);
         if(post == null){
@@ -237,7 +243,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void deleteComment(Long commentId) {
+    @Transactional
+    public void deleteComment(Long commentId, String email, String rolesHeader) {
 
 //        UserDto userDto = getAuthenticatedUser();
 
@@ -246,6 +253,13 @@ public class BoardServiceImpl implements BoardService {
 //        if (roles.contains("TEMP_SUSP_AUTH") || roles.contains("PERM_SUSP_AUTH")) {
 //            throw new RuntimeException("임시 정지 또는 영구 정지된 사용자는 글을 삭제할 수 없습니다.");
 //        }
+
+
+        List<String> roles = Arrays.asList(rolesHeader.split(","));
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .roles(roles)
+                .build();
 
         Comments comment = commentMapper.findCommentById(commentId);
         if(comment == null){
